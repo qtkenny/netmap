@@ -1,0 +1,63 @@
+https://www.bbc.co.uk/rd/blog/2018-04-high-speed-networking-open-source-kernel-bypass
+
+High Speed Networking: Open Sourcing our Kernel Bypass Work
+We're publishing open source contributions to aid adoption of software based solutions for streaming raw video.
+
+Published: 24 April 2018
+Andrew Bonney (BEng)
+Andrew Bonney (BEng)
+Senior R&D Engineer
+Over the past few years, the IP Studio project has been designing and developing solutions to test out the principle of producing broadcast quality content on Internet Protocol (IP) networks. This work has resulted in contributions to industry standards and specifications, but has also accrued a wealth of software which can be used in whole or in part to solve problems in this area. As standards mature and 'off the shelf' implementations become more common, we're publishing some of our software as open source contributions to further aid adoption.
+
+
+BBC R&D - Cloud-Fit Production
+BBC R&D - Beyond Streams and Files - Storing Frames in the Cloud
+One aspect of our work has covered the challenges of using software to transmit and receive streams of high data rate media over IP networks. This is all the more relevant as the broadcast industry starts to deploy facilities which implement the SMPTE 2110 suite of standards. The unique challenge here involves handling IP packets (around 1500 bytes each) at data rates of between 1 and 8 Gigabits per second for typical uncompressed High Definition and Ultra High Definition formats. As we discovered, one of the greatest bottlenecks when handling this volume of data in software is the computational expense of copying these packets between different areas of memory, something which has to happen multiple times when using the Linux kernel's standard sockets library. Back in 2015 we discussed our use of the open source project Netmap on 25 and 100Gb/s IP networks, which is one of several possible tools which allow the transmission and reception of much higher data rates by using 'kernel bypass' techniques. As the name suggests, this mechanism bypasses the operating system's default path for processing packets, providing a more direct route between applications and the network hardware.
+
+Whilst Netmap helps us to reduce the number of copy operations required, we can further enhance performance by interacting directly with the network interface card (NIC) hardware, allowing multiple packets to be passed to the NIC at one time. This could be achieved by interacting directly with any vendor's NIC driver from our applications, but given a desire to prototype with a range of network cards we didn't want to have to write code to interact with each vendor's driver directly. Thankfully, Netmap provides an abstraction layer to enable this. The Netmap codebase includes patches for several vendors' drivers which allow an application to interact with Netmap's API, but under the hood directly pass data to and from the NIC hardware.
+
+Sign up for the IP Studio Insider Newsletter:
+Join our mailing list and receive news and updates from our IP Studio team every quarter.
+First Name:
+Last Name: 
+Company:   
+Email:         
+or Unsubscribe
+At the time we started this work we used 10Gb/s NICs which Netmap already had good support for, however given our desire to work with multiple HD or UHD streams we rapidly outgrew the capacity of a single 10Gb/s link. With the advent of 25 and 100Gb/s networking we wanted to see what performance we could achieve on those cards too.
+
+With very few 25 and 100Gb/s network cards available at the time we opted to prototype with the Mellanox ConnectX-4 range. One of the major advantages to this was the availability of an open source network driver, which is bundled as part of the Linux kernel. This permissive open source licence allowed us to patch the driver source directly. Through the development of a patched driver for Netmap we were able to send and receive data rates exceeding 80Gb/s using a single thread.
+
+As our work moves on to other challenges and opportunities afforded by IP production we wanted to make the results of our efforts available to the wider community, enhancing Netmap's capabilities to operate with a greater range of manufacturers' network cards, and allowing implementers a straightforward path to implement high data rate networking in software without being locked to a single hardware vendor.
+
+These patches are now available from the Netmap software repository on GitHub, and we're hoping to release further software and patches in the future covering other IP broadcasting requirements.
+
+Thank you to Mellanox for their support throughout this project, and to the Netmap project for their support in integrating the patches.
+
+Tweet This - Share on Facebook
+BBC R&D - High Speed Networking: Open Sourcing our Kernel Bypass Work
+BBC R&D - Beyond Streams and Files - Storing Frames in the Cloud
+BBC R&D - IP Studio
+BBC R&D - IP Studio: Lightweight Live
+BBC R&D - IP Studio: 2017 in Review - 2016 in Review
+BBC R&D - IP Studio Update: Partners and Video Production in the Cloud
+IBC 365 - Production and post prepare for next phase of cloud-fit technology
+BBC R&D - Running an IP Studio
+BBC R&D - Building a Live Television Video Mixing Application for the Browser
+BBC R&D - Nearly Live Production
+BBC R&D - Discovery and Registration in IP Studio
+BBC R&D - Media Synchronisation in the IP Studio
+AMWA - Advanced Media Workflow Association
+BBC R&D - Industry Workshop on Professional Networked Media
+NMOS - Networked Media Open Specifications
+BBC R&D - The IP Studio
+BBC R&D - IP Studio at the UK Network Operators Forum
+BBC R&D - Industry Workshop on Professional Networked Media
+BBC R&D - Covering the Glasgow 2014 Commonwealth Games using IP Studio
+BBC R&D - Investigating the IP future for BBC Northern Ireland
+
+Automated Production and Media Management section
+This project is part of the Automated Production and Media Management section
+Topics
+Networks
+Video
+Internet
